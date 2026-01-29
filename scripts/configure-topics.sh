@@ -9,9 +9,8 @@ declare -a TOPICS=(
   "chat-messages"
   "upload-messages"
   "ondash.llm.status"
-  "ondash.llm.complete"
-  "ondash.llm.chart"
-  "ondash.llm.text"
+  "ondash.llm.error"
+  "ondash.llm.answer"
 )
 
 # Compatibility level: BACKWARD, FORWARD, FULL, NONE

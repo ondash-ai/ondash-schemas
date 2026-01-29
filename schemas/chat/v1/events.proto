@@ -6,6 +6,13 @@ option go_package = "github.com/looptroops/socket/internal/pb/schemas/chat/v1";
 
 import "google/protobuf/timestamp.proto";
 
+// =============================================================================
+// KAFKA TOPICS:
+//   - ondash.llm.status → StatusEvent (progress during execution)
+//   - ondash.llm.error  → ErrorEvent (error notifications)
+//   - ondash.llm.answer → AnswerEvent (all content: text, chart, widget, dashboard, etc.)
+// =============================================================================
+
 // Base envelope for all events sent to Kafka topics
 message EventEnvelope {
   google.protobuf.Timestamp timestamp = 1;
@@ -18,75 +25,70 @@ message EventEnvelope {
   // Event payload (one of)
   oneof event {
     StatusEvent status = 10;
-    TextEvent text = 11;
-    ChartEvent chart = 12;
-    ErrorEvent error = 13;
-    CompletionEvent completion = 14;
+    ErrorEvent error = 11;
+    AnswerEvent answer = 12;
   }
 }
 
-// Status update during scenario execution
+// ---------------------------------------------------------------------------
+// StatusEvent - Progress updates during execution (ondash.llm.status)
+// ---------------------------------------------------------------------------
 message StatusEvent {
-  string step = 1;                          // Current step name (e.g., "sql_generation")
-  string description = 2;                    // Human-readable description
-  int32 progress_percent = 3;                // Optional progress (0-100)
-  map<string, string> metadata = 4;          // Additional key-value metadata
+  string step = 1;                          // Step identifier (e.g., "sql_generation")
+  string description = 2;                   // Human-readable description
+  int32 progress_percent = 3;               // Progress (0-100)
+  bool is_complete = 4;                     // True when task/conversation is complete
+  map<string, string> metadata = 5;         // Additional context
 }
 
-// Text content to display
-message TextEvent {
-  string content = 1;                        // Text content
-  string language = 2;                       // Language code (e.g., "en", "hu")
-  TextPosition position = 3;                 // Position relative to other content
-
-  enum TextPosition {
-    STANDALONE = 0;                          // Independent text
-    BEFORE = 1;                              // Before main content (e.g., chart intro)
-    AFTER = 2;                               // After main content (e.g., chart analysis)
-  }
-}
-
-// Chart visualization
-message ChartEvent {
-  string chart_type = 1;                     // Chart type (e.g., "bar", "line", "pie")
-  string config_json = 2;                    // Serialized ECharts configuration JSON
-  ChartMetadata metadata = 3;                // Optional metadata
-
-  message ChartMetadata {
-    string title = 1;                        // Chart title
-    int32 data_points = 2;                   // Number of data points
-    string data_source = 3;                  // Data source identifier
-  }
-}
-
-// Error event
+// ---------------------------------------------------------------------------
+// ErrorEvent - Error notifications (ondash.llm.error)
+// ---------------------------------------------------------------------------
 message ErrorEvent {
-  ErrorSeverity severity = 1;                // Error severity level
-  string error_code = 2;                     // Error code (e.g., "SQL_TIMEOUT", "NOT_IMPLEMENTED")
-  string message = 3;                        // Human-readable error message
-  string step_name = 4;                      // Step where error occurred
-  bool recoverable = 5;                      // Whether error is recoverable
-  int32 retry_count = 6;                     // Number of retries attempted
-  map<string, string> details = 7;           // Additional error details
+  ErrorSeverity severity = 1;               // Error severity level
+  string error_code = 2;                    // Error code (e.g., "SQL_TIMEOUT", "INVALID_COMMAND")
+  string message = 3;                       // Human-readable error message
+  string step_name = 4;                     // Step where error occurred
+  bool recoverable = 5;                     // Whether error is recoverable
+  map<string, string> details = 6;          // Additional error details
 
   enum ErrorSeverity {
-    WARNING = 0;                             // Warning, execution continues
-    ERROR = 1;                               // Error, execution may stop
-    CRITICAL = 2;                            // Critical error, execution stops
+    WARNING = 0;                            // Warning, execution continues
+    ERROR = 1;                              // Error, execution may stop
+    CRITICAL = 2;                           // Critical error, execution stops
   }
 }
 
-// Task or conversation completion
-message CompletionEvent {
-  CompletionType type = 1;                   // Type of completion
-  string summary = 2;                        // Completion summary
-  repeated string result_ids = 3;            // IDs of generated results
-  int64 execution_time_ms = 4;               // Total execution time in milliseconds
-  map<string, string> metadata = 5;          // Additional completion metadata
+// ---------------------------------------------------------------------------
+// AnswerEvent - All content responses (ondash.llm.answer)
+// ---------------------------------------------------------------------------
+message AnswerEvent {
+  AnswerType type = 1;                      // Content type
+  string content_json = 2;                  // JSON payload (structure varies by type)
+  AnswerMetadata metadata = 3;              // Content metadata
+  AnswerPosition position = 4;              // Position hint for UI
 
-  enum CompletionType {
-    TASK_COMPLETED = 0;                      // Single task completed successfully
-    CONVERSATION_COMPLETED = 1;              // Entire conversation completed
-    TASK_FAILED = 2;                         // Single task failed
+  enum AnswerType {
+    ANSWER_TYPE_UNSPECIFIED = 0;
+    ANSWER_TYPE_TEXT = 1;                   // Plain text or markdown
+    ANSWER_TYPE_CHART = 2;                  // ECharts visualization
+    ANSWER_TYPE_WIDGET = 3;                 // KPI/statistic widget
+    ANSWER_TYPE_DASHBOARD = 4;              // Full dashboard (layout + widgets)
+    ANSWER_TYPE_TABLE = 5;                  // Data table/preview
+    ANSWER_TYPE_CONFIRMATION = 6;           // Confirmation dialog
+    ANSWER_TYPE_FORM = 7;                   // Input form
+  }
+
+  enum AnswerPosition {
+    STANDALONE = 0;                         // Independent content
+    BEFORE = 1;                             // Before main content
+    AFTER = 2;                              // After main content
+  }
+
+  message AnswerMetadata {
+    string title = 1;                       // Content title
+    string language = 2;                    // Language code (for text)
+    int32 item_count = 3;                   // Number of items (widgets, rows)
+    map<string, string> extra = 4;          // Additional metadata
   }
 }
