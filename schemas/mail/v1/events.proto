@@ -1,0 +1,73 @@
+syntax = "proto3";
+
+package mail.v1;
+
+option go_package = "github.com/looptroops/socket/internal/pb/schemas/mail/v1";
+
+import "google/protobuf/timestamp.proto";
+
+// =============================================================================
+// KAFKA TOPICS:
+//   - ondash.mail.incoming → IncomingMailEvent (emails received via SES)
+//   - ondash.mail.outgoing → OutgoingMailEvent (emails sent via SMTP/SES)
+// =============================================================================
+
+// Base envelope for all mail events sent to Kafka topics
+message MailEventEnvelope {
+  google.protobuf.Timestamp timestamp = 1;
+  string message_id = 2;
+  string company_id = 3;
+  string user_id = 4;
+
+  // Event payload (one of)
+  oneof event {
+    IncomingMailEvent incoming = 10;
+    OutgoingMailEvent outgoing = 11;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// IncomingMailEvent - Email received via SES → S3 → SQS pipeline
+// ---------------------------------------------------------------------------
+message IncomingMailEvent {
+  string from = 1;
+  repeated string to = 2;
+  repeated string cc = 3;
+  string subject = 4;
+  string body_text = 5;
+  string body_html = 6;
+  string s3_bucket = 7;
+  string s3_key = 8;
+  string date = 9;
+  string in_reply_to = 10;
+  repeated string references = 11;
+  repeated MailAttachment attachments = 12;
+  map<string, string> headers = 13;
+}
+
+// ---------------------------------------------------------------------------
+// OutgoingMailEvent - Email sent via SMTP or SES
+// ---------------------------------------------------------------------------
+message OutgoingMailEvent {
+  string from = 1;
+  repeated string to = 2;
+  repeated string cc = 3;
+  string subject = 4;
+  string body_text = 5;
+  string body_html = 6;
+  bool success = 7;
+  string error_message = 8;
+  string sending_method = 9;
+  repeated MailAttachment attachments = 10;
+}
+
+// ---------------------------------------------------------------------------
+// MailAttachment - Attachment metadata
+// ---------------------------------------------------------------------------
+message MailAttachment {
+  string filename = 1;
+  string content_type = 2;
+  int64 size_bytes = 3;
+  string s3_key = 4;
+  string s3_bucket = 5;
+}
