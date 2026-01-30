@@ -4,23 +4,7 @@
 
 This repository contains the **single source of truth** for Protocol Buffer schema definitions used across all Ondash services. It contains only `.proto` files - no generated code.
 
-## Architecture
 
-```
-ondash-schemas/
-├── schemas/                    # Protocol Buffer definitions
-│   ├── chat/v1/
-│   │   ├── chat.proto         # Chat messages and content blocks
-│   │   └── events.proto       # Real-time event streaming
-│   └── upload/v1/
-│       └── upload.proto       # File upload metadata
-├── scripts/                    # Kafka/Schema Registry scripts
-│   ├── publish-to-registry.sh
-│   ├── configure-topics.sh
-│   └── test-produce.sh
-└── docs/
-    └── schema.md              # This file
-```
 
 ## Consuming Services
 
