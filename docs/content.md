@@ -1,20 +1,14 @@
 # Content
 
-schema structure:
-  - chat: schemas for user-ser communication
-  - llm: schemas for user-ai agent communication
-  - mail: event schemas when new email arrives
-  - upload: event schemas when new file uploaded
 
-basic operations:
-  - create new topic
-  - upload schema
-  - test: produce
-  - test: consume
+Intro:
+  - [best practices](best_practices.md) 
+  - [basic tools](basic_tools.md)
+  - [folder structure](folder_structure.md)
 
 
-operations:
-  - uploading schemas to redpanda
-  - [updating other repositories](code_generation.md)
-  - [Publishing new version schema](publish.md)
+Usage:
+  - [basic operation](basic_operation.md)
+  - [code generation](code_generation.md)
+  - [new schema version in git](publish.md)
 

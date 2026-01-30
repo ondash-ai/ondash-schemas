@@ -148,44 +148,10 @@ brew install jq
 brew install redpanda-data/tap/redpanda
 ```
 
-### Scripts
 
-```bash
-npm install              # Install jq dependency check
-npm run kafka            # Upload to registry
-npm run kafka:configure  # Configure topics
-npm run kafka:test       # Test message production
 ```
 
-## Best Practices
 
-### Schema Design
-
-✅ **Do:**
-- Use optional fields for flexibility
-- Add descriptive comments
-- Use semantic versioning for packages
-- Keep messages focused and cohesive
-- Use `oneof` for union types
-
-❌ **Don't:**
-- Remove or rename existing fields
-- Change field types (breaks deserialization)
-- Use `required` (deprecated in proto3)
-- Mix concerns in a single message
-
-### Compatibility
-
-**Backward Compatible Changes:**
-- Adding new optional fields
-- Adding new message types
-- Adding new enum values (with default)
-
-**Breaking Changes:**
-- Removing fields
-- Renaming fields
-- Changing field types
-- Changing field numbers
 
 ## Troubleshooting
 
