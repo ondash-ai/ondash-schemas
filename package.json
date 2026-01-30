@@ -6,8 +6,7 @@
   "scripts": {
     "kafka": "bash scripts/publish-to-registry.sh",
     "kafka:configure": "bash scripts/configure-topics.sh",
-    "kafka:test": "bash scripts/test-produce.sh",
-    "console:configure": "bash scripts/configure-console.sh"
+    "kafka:test": "bash scripts/test-produce.sh"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
