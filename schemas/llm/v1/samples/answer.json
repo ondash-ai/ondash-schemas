@@ -1,0 +1,1 @@
+{"timestamp": "2024-01-01T00:00:00Z", "conversation_id": "conv-1", "task_id": "task-1", "scenario": "sql", "user_id": "user-1", "company_id": "comp-1", "answer": {"type": "ANSWER_TYPE_TEXT", "content_json": "{\"text\": \"Here is your result\"}", "metadata": {"title": "Query Result"}}}

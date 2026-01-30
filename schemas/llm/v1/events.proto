@@ -8,9 +8,9 @@ import "google/protobuf/timestamp.proto";
 
 // =============================================================================
 // KAFKA TOPICS:
-//   - ondash.llm.status → StatusEvent (progress during execution)
-//   - ondash.llm.error  → ErrorEvent (error notifications)
-//   - ondash.llm.answer → AnswerEvent (all content: text, chart, widget, dashboard, etc.)
+//   - llm.status → StatusEvent (progress during execution)
+//   - llm.error  → ErrorEvent (error notifications)
+//   - llm.answer → AnswerEvent (all content: text, chart, widget, dashboard, etc.)
 // =============================================================================
 
 // Base envelope for all events sent to Kafka topics

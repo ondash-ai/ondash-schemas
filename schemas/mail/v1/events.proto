@@ -8,8 +8,8 @@ import "google/protobuf/timestamp.proto";
 
 // =============================================================================
 // KAFKA TOPICS:
-//   - ondash.mail.incoming → IncomingMailEvent (emails received via SES)
-//   - ondash.mail.outgoing → OutgoingMailEvent (emails sent via SMTP/SES)
+//   - mail.incoming → IncomingMailEvent (emails received via SES)
+//   - mail.outgoing → OutgoingMailEvent (emails sent via SMTP/SES)
 // =============================================================================
 
 // Base envelope for all mail events sent to Kafka topics

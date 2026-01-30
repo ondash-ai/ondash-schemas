@@ -1,0 +1,1 @@
+{"timestamp": "2024-01-01T00:00:00Z", "conversation_id": "conv-1", "task_id": "task-1", "scenario": "sql", "user_id": "user-1", "company_id": "comp-1", "error": {"severity": "ERROR", "error_code": "SQL_TIMEOUT", "message": "Query timed out", "step_name": "sql_execution", "recoverable": true}}

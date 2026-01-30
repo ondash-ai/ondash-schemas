@@ -6,6 +6,12 @@ schema structure:
   - mail: event schemas when new email arrives
   - upload: event schemas when new file uploaded
 
+basic operations:
+  - create new topic
+  - upload schema
+  - test: produce
+  - test: consume
+
 
 operations:
   - uploading schemas to redpanda
