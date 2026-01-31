@@ -1,9 +1,9 @@
 # Code Generation
 
+Every component which needs the protobuf and the generated code, they do it for themselves. 
 
-Use the scripts from the scripts folder. 
 
-If that is not enough, here are the commands:
+
 
 ```bash
 #!/bin/bash
@@ -19,10 +19,4 @@ protoc --python_out=backend/generated --pyi_out=backend/generated schemas/chat.p
 protoc --plugin=protoc-gen-jsonschema --jsonschema_out=. schemas/chat.proto
 node scripts/jsonschema-to-graphql.js
 
-# Kafka Schema Registry
-protoc --descriptor_set_out=schemas/chat.desc schemas/chat.proto
-# Upload to Schema Registry
-curl -X POST -H "Content-Type: application/octet-stream" \
-  --data-binary @schemas/chat.desc \
-  http://schema-registry:8081/subjects/chat-messages-value/versions
 ```

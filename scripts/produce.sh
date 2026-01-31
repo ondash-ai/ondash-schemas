@@ -32,7 +32,24 @@ echo "Producing to topic: $TOPIC"
 echo "Sample file: $SAMPLE_FILE"
 echo ""
 
-cat "$SAMPLE_FILE" | rpk topic produce "$TOPIC" --profile ondash
+# Look up schema ID from registry
+SCHEMA_REGISTRY_URL="http://ondash:30081"
+SUBJECT="${TOPIC}-value"
+SCHEMA_ID=$(curl -s "$SCHEMA_REGISTRY_URL/subjects/$SUBJECT/versions/latest" | jq -r '.id')
+
+if [ -z "$SCHEMA_ID" ] || [ "$SCHEMA_ID" = "null" ]; then
+  echo "Warning: No schema found for subject '$SUBJECT', producing raw JSON"
+  cat "$SAMPLE_FILE" | rpk topic produce "$TOPIC" --profile ondash
+else
+  # Find the proto package to derive the schema type (e.g., chat.v1.Message)
+  PROTO_FILE=$(find "$latest" -maxdepth 1 -name "*.proto" | head -1)
+  PACKAGE=$(grep '^package ' "$PROTO_FILE" | sed 's/package //;s/;//')
+  MESSAGE=$(grep '^message ' "$PROTO_FILE" | head -1 | sed 's/message //;s/ {//')
+  SCHEMA_TYPE="${PACKAGE}.${MESSAGE}"
+
+  echo "Schema ID: $SCHEMA_ID, Type: $SCHEMA_TYPE"
+  cat "$SAMPLE_FILE" | rpk topic produce "$TOPIC" --profile ondash --schema-id "$SCHEMA_ID" --schema-type "$SCHEMA_TYPE"
+fi
 
 echo ""
 echo "Done."
