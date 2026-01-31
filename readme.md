@@ -1,3 +1,3 @@
 # Ondash Schemas
 
-This directory contains Protocol Buffer schema definitions for the ONDASH event bus.
+This repository contains the **single source of truth** for Protocol Buffer schema definitions used across all Ondash services. It contains only `.proto` files - no generated code.

@@ -1,6 +1,26 @@
 # Versioning
 
 
+### Versioning Strategy
+
+Schemas are organized by domain and version:
+- `{domain}/{version}/{schema}.proto`
+- Example: `chat/v1/chat.proto`, `chat/v1/events.proto`
+
+**Version incrementing:**
+- **v1 → v2**: Breaking changes (field removal, type changes)
+- **Patch updates**: Additive changes (new optional fields)
+
+
+
+**Guidelines:**
+- Use optional fields for non-breaking changes
+- Never remove or rename existing fields (breaks compatibility)
+- Add new message types for major changes
+- Increment version (v1 → v2) for breaking changes
+
+
+
 # Tag versions semantically
 ```bash
 git tag v1.0.0  # Initial release
