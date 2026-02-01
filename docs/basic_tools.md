@@ -81,10 +81,10 @@ rpk topic produce chat-messages --profile ondash \
   --schema-id 2 \
   --schema-type chat.v1.Message
 
-# Upload messages (schema id: 1)
-rpk topic produce upload-messages --profile ondash \
+# File events (schema id: 1)
+rpk topic produce file-events --profile ondash \
   --schema-id 1 \
-  --schema-type upload.v1.Message
+  --schema-type file.v1.FileEvent
 ```
 
 Verify topics exist:

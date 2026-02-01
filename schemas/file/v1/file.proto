@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package file.v1;
+
+option go_package = "github.com/looptroops/socket/internal/pb/schemas/file/v1";
+
+enum FileState {
+  FILE_STATE_UNSPECIFIED = 0;
+  FILE_STATE_CREATED = 1;
+  FILE_STATE_UPLOADED = 2;
+  FILE_STATE_SCHEDULED = 3;
+  FILE_STATE_PROCESSING = 4;
+  FILE_STATE_PROCESSED = 5;
+  FILE_STATE_DELETED = 6;
+  FILE_STATE_ERROR = 7;
+}
+
+message FileEvent {
+  string id = 1;
+  string file_id = 2;
+  string filename = 3;
+  string path = 4;
+  FileState state = 5;
+  string message = 6;
+  string error = 7;
+  string progress = 8;
+  int64 timestamp = 9;
+}
