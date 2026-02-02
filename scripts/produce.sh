@@ -3,10 +3,27 @@ set -e
 
 TOPIC=$1
 if [ -z "$TOPIC" ]; then
-  echo "Usage: $0 <topic>"
+  echo "Usage: $0 <topic> [-file <path>]"
   echo "Example: $0 llm.status"
+  echo "         $0 file.events -file ./my-event.json"
   exit 1
 fi
+shift
+
+# Parse optional flags
+CUSTOM_FILE=""
+while [ $# -gt 0 ]; do
+  case "$1" in
+    -file)
+      CUSTOM_FILE="$2"
+      shift 2
+      ;;
+    *)
+      echo "Unknown option: $1"
+      exit 1
+      ;;
+  esac
+done
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 REPO_ROOT="$(dirname "$SCRIPT_DIR")"
@@ -22,9 +39,14 @@ if [ -z "$latest" ]; then
   exit 1
 fi
 
-SAMPLE_FILE="$latest/samples/$SUBTOPIC.json"
+if [ -n "$CUSTOM_FILE" ]; then
+  SAMPLE_FILE="$CUSTOM_FILE"
+else
+  SAMPLE_FILE="$latest/samples/$SUBTOPIC.json"
+fi
+
 if [ ! -f "$SAMPLE_FILE" ]; then
-  echo "Error: Sample file not found: $SAMPLE_FILE"
+  echo "Error: File not found: $SAMPLE_FILE"
   exit 1
 fi
 
