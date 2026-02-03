@@ -26,3 +26,25 @@ message FileEvent {
   string progress = 8;
   int64 timestamp = 9;
 }
+
+enum FileCommandType {
+  FILE_COMMAND_UNSPECIFIED = 0;
+  FILE_COMMAND_EXTRACT = 1;
+  FILE_COMMAND_OVERWRITE = 2;
+  FILE_COMMAND_DELETE = 3;
+}
+
+message FileCommand {
+  string id = 1;
+  FileCommandType command = 2;
+  string file_id = 3;
+  string filename = 4;
+  string project_id = 5;
+  string user_id = 6;
+  string company_name = 7;
+  string adoszam = 8;
+  string period_start = 9;
+  string period_end = 10;
+  string s3_path = 11;
+  int64 timestamp = 12;
+}
