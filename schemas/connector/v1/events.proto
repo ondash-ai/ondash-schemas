@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package connector.v1;
+
+option go_package = "github.com/looptroops/socket/internal/pb/schemas/connector/v1";
+
+// =============================================================================
+// KAFKA TOPICS:
+//   - connector → ConnectorEvent (connector lifecycle: created, removed, initialized)
+// =============================================================================
+
+enum ConnectorEventType {
+  CONNECTOR_EVENT_UNSPECIFIED = 0;
+  CONNECTOR_EVENT_CREATED = 1;
+  CONNECTOR_EVENT_REMOVED = 2;
+  CONNECTOR_EVENT_INITIALIZED = 3;
+}
+
+message ConnectorEvent {
+  string id = 1;
+  ConnectorEventType event_type = 2;
+  string project_id = 3;
+  string connection_id = 4;
+  string connection_type = 5;
+  string schema_name = 6;
+  int64 timestamp = 7;
+}
