@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package project.v1;
+
+option go_package = "github.com/looptroops/socket/internal/pb/schemas/project/v1";
+
+// =============================================================================
+// KAFKA TOPICS:
+//   - project.events → ProjectEvent (project section changes: connections, documents, etc.)
+// =============================================================================
+
+enum ProjectSectionType {
+  PROJECT_SECTION_UNSPECIFIED = 0;
+  PROJECT_SECTION_CONNECTIONS = 1;
+  PROJECT_SECTION_DOCUMENTS = 2;
+  PROJECT_SECTION_SETTINGS = 3;
+  PROJECT_SECTION_DASHBOARDS = 4;
+}
+
+message ProjectEvent {
+  string id = 1;
+  string project_id = 2;
+  ProjectSectionType changed_section = 3;
+  int64 timestamp = 4;
+}
