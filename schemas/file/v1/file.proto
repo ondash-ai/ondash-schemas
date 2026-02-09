@@ -47,4 +47,5 @@ message FileCommand {
   string period_end = 10;
   string s3_path = 11;
   int64 timestamp = 12;
+  string schema_name = 13;
 }
