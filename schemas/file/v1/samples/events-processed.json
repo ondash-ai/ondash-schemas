@@ -1,1 +1,1 @@
-{"id": "evt-1", "fileId": "file-1", "filename": "report.csv", "path": "/uploads/report.csv", "state": "FILE_STATE_PROCESSED", "message": "File processed successfully", "error": "", "progress": "finished", "timestamp": 1698765432}
+{"id": "evt-1", "fileId": "file-1", "filename": "report.csv", "timestamp": 1698765432, "fileEvent": {"path": "/uploads/report.csv", "state": "FILE_STATE_PROCESSED", "message": "File processed successfully", "error": "", "progress": "finished", "projectId": "6855c90efc041657adca4be7", "schemaName": "my_project_6855c90e"}}
