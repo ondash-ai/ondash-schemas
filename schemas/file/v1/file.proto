@@ -19,6 +19,7 @@ enum FileState {
   FILE_STATE_PROCESSED = 5;
   FILE_STATE_DELETED = 6;
   FILE_STATE_ERROR = 7;
+  FILE_STATE_CANCELLED = 8;
 }
 
 enum FileCommandType {
@@ -26,6 +27,7 @@ enum FileCommandType {
   FILE_COMMAND_EXTRACT = 1;
   FILE_COMMAND_OVERWRITE = 2;
   FILE_COMMAND_DELETE = 3;
+  FILE_COMMAND_CANCEL = 4;
 }
 
 // Base envelope for all file events sent to Kafka topics
