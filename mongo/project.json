@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "project.json",
+  "title": "Project MongoDB types",
+  "description": "Project and connection domain models",
+  "$defs": {
+    "ConnectionAccess": {
+      "title": "ConnectionAccess",
+      "type": "string",
+      "enum": ["READ", "WRITE"]
+    },
+    "ConnectionType": {
+      "title": "ConnectionType",
+      "type": "string",
+      "enum": ["FILESYSTEM", "SQLDATABASE", "EMAIL", "API", "AUDITXML", "EVENTS"]
+    },
+    "Email": {
+      "title": "Email",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string" }
+      },
+      "required": ["email"]
+    },
+    "HeadCountAtDate": {
+      "title": "HeadCountAtDate",
+      "type": "object",
+      "properties": {
+        "date": { "type": "string" },
+        "headcount": { "type": "integer" }
+      },
+      "required": ["date", "headcount"]
+    },
+    "Accountancy": {
+      "title": "Accountancy",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "default": "" },
+        "contact_name": { "type": "string", "default": "" },
+        "phone_number": { "type": "string", "default": "" },
+        "email": { "type": "string", "default": "" }
+      }
+    },
+    "ProjectInfo": {
+      "title": "ProjectInfo",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "default": "" },
+        "description": { "type": "string", "default": "" },
+        "website": { "type": "string", "default": "" },
+        "contact": { "type": "string", "default": "" },
+        "sector": { "type": "string", "default": "" },
+        "logo": { "type": "string", "default": "" },
+        "headcount": { "type": "array", "items": { "$ref": "#/$defs/HeadCountAtDate" }, "default": [] },
+        "accountancy": { "allOf": [{ "$ref": "#/$defs/Accountancy" }], "default": {} }
+      }
+    },
+    "ConnectionBase": {
+      "title": "ConnectionBase",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "default": "" },
+        "name": { "type": "string" },
+        "description": { "type": "string", "default": "" },
+        "access": { "allOf": [{ "$ref": "#/$defs/ConnectionAccess" }], "default": "READ" },
+        "type": { "$ref": "#/$defs/ConnectionType" },
+        "params": { "type": "object", "default": {} },
+        "status": { "type": "object", "default": {} },
+        "last_updated": { "type": ["string", "null"], "format": "date-time", "default": null }
+      },
+      "required": ["name", "type"]
+    },
+    "DProjectBase": {
+      "title": "DProjectBase",
+      "type": "object",
+      "properties": {
+        "id": { "type": ["string", "null"], "default": null },
+        "version": { "type": "string", "default": "0.3" },
+        "admin": { "type": "string", "default": "" },
+        "title": { "type": "string", "default": "" },
+        "description": { "type": "string", "default": "" },
+        "website": { "type": "string", "default": "" },
+        "contact": { "type": "string", "default": "" },
+        "sector": { "type": "string", "default": "" },
+        "logo": { "type": "string", "default": "" },
+        "headcount": { "type": "array", "items": { "$ref": "#/$defs/HeadCountAtDate" }, "default": [] },
+        "accountancy": { "allOf": [{ "$ref": "#/$defs/Accountancy" }], "default": {} },
+        "shared": { "type": "array", "items": { "type": "string" }, "default": [] },
+        "lang": { "type": "string", "default": "en" },
+        "pipeline": { "type": "string", "default": "ledger" },
+        "chat": { "type": "string", "default": "" },
+        "tags": { "type": "array", "items": { "type": "string" }, "default": [] },
+        "connections": { "type": "array", "items": { "$ref": "#/$defs/ConnectionBase" }, "default": [] },
+        "schema_name": { "type": "string", "default": "" },
+        "documents_synced": { "type": "boolean", "default": false }
+      }
+    }
+  }
+}

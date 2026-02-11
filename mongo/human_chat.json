@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "human_chat.json",
+  "title": "Human Chat MongoDB types",
+  "description": "Human chat batch models for user-to-user messaging",
+  "$defs": {
+    "DChatMessage": {
+      "title": "DChatMessage",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "sender_id": { "type": "string" },
+        "recipient_id": { "type": "string" },
+        "content": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "sender_id", "recipient_id", "content", "timestamp"]
+    },
+    "DHumanChatBatchBase": {
+      "title": "DHumanChatBatchBase",
+      "type": "object",
+      "properties": {
+        "id": { "type": ["string", "null"], "default": null },
+        "chat_id": { "type": "string" },
+        "batch_index": { "type": "integer" },
+        "messages": { "type": "array", "items": { "$ref": "#/$defs/DChatMessage" }, "default": [] },
+        "is_current": { "type": "boolean", "default": false },
+        "created_at": { "type": ["string", "null"], "format": "date-time", "default": null }
+      },
+      "required": ["chat_id", "batch_index"]
+    }
+  }
+}

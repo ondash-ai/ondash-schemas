@@ -1,0 +1,128 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "chat.json",
+  "title": "Chat MongoDB types",
+  "description": "Chat and messaging domain models",
+  "$defs": {
+    "DChatType": {
+      "title": "DChatType",
+      "type": "string",
+      "enum": ["ai_assistant", "user_chat"]
+    },
+    "DUserRate": {
+      "title": "DUserRate",
+      "type": "string",
+      "enum": ["ThumbUp", "ThumbDown", "ThumbUnknown"]
+    },
+    "ChatStatus": {
+      "title": "ChatStatus",
+      "type": "string",
+      "enum": ["unknown", "queued", "in_progress", "requires_action", "cancelling", "cancelled", "failed", "completed", "expired"]
+    },
+    "Action": {
+      "title": "Action",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "parameters": { "type": "object" }
+      },
+      "required": ["name", "parameters"]
+    },
+    "DUserMessage": {
+      "title": "DUserMessage",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "sender_id": { "type": "string" },
+        "sender_name": { "type": "string" },
+        "content": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "edited_at": { "type": ["string", "null"], "format": "date-time", "default": null },
+        "reply_to": { "type": ["string", "null"], "default": null },
+        "attachments": { "type": "array", "items": { "type": "string" }, "default": [] }
+      },
+      "required": ["id", "sender_id", "sender_name", "content", "timestamp"]
+    },
+    "DParticipant": {
+      "title": "DParticipant",
+      "type": "object",
+      "properties": {
+        "user_id": { "type": "string" },
+        "joined_at": { "type": "string", "format": "date-time" },
+        "last_read_at": { "type": ["string", "null"], "format": "date-time", "default": null },
+        "is_muted": { "type": "boolean", "default": false }
+      },
+      "required": ["user_id", "joined_at"]
+    },
+    "DMessageBase": {
+      "title": "DMessageBase",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "assistant_id": { "type": "string" },
+        "thread_id": { "type": "string" },
+        "role": { "type": "string" },
+        "message": { "type": "string" },
+        "action": { "type": "string", "default": "" },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "user_rate": { "allOf": [{ "$ref": "#/$defs/DUserRate" }], "default": "ThumbUnknown" }
+      },
+      "required": ["id", "assistant_id", "thread_id", "role", "message", "timestamp"]
+    },
+    "DReportBase": {
+      "title": "DReportBase",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "type": { "type": "string", "default": "report" },
+        "email_address": { "type": "string", "default": "" },
+        "filename": { "type": "string" }
+      },
+      "required": ["id", "title", "filename"]
+    },
+    "DFormBase": {
+      "title": "DFormBase",
+      "type": "object",
+      "properties": {},
+      "additionalProperties": true
+    },
+    "DPluginBase": {
+      "title": "DPluginBase",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "default": "" },
+        "message_id": { "type": "string" },
+        "object": { "type": "object" }
+      },
+      "required": ["message_id", "object"]
+    },
+    "DChatBase": {
+      "title": "DChatBase",
+      "type": "object",
+      "properties": {
+        "id": { "type": ["string", "null"], "default": null },
+        "version": { "type": "string", "default": "0.4" },
+        "instruction": { "type": "string", "default": "" },
+        "title": { "type": "string" },
+        "date": { "type": "string", "format": "date-time" },
+        "project_id": { "type": "string" },
+        "thread_id": { "type": "string", "default": "" },
+        "run_id": { "type": "string", "default": "" },
+        "message_id": { "type": "string", "default": "" },
+        "status": { "allOf": [{ "$ref": "#/$defs/ChatStatus" }], "default": "unknown" },
+        "assistant_id": { "type": "string", "default": "" },
+        "user_id": { "type": "string", "default": "" },
+        "messages": { "type": "array", "items": { "$ref": "#/$defs/DMessageBase" } },
+        "plugins": { "type": "array", "items": { "$ref": "#/$defs/DPluginBase" }, "default": [] },
+        "type": { "allOf": [{ "$ref": "#/$defs/DChatType" }], "default": "ai_assistant" },
+        "user_messages": { "type": "array", "items": { "$ref": "#/$defs/DUserMessage" }, "default": [] },
+        "participants": { "type": "array", "items": { "$ref": "#/$defs/DParticipant" }, "default": [] },
+        "created_by": { "type": ["string", "null"], "default": null },
+        "created_at": { "type": ["string", "null"], "format": "date-time", "default": null },
+        "updated_at": { "type": ["string", "null"], "format": "date-time", "default": null }
+      },
+      "required": ["title", "date", "project_id", "messages"]
+    }
+  }
+}

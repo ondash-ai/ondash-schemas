@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "dashboard.json",
+  "title": "Dashboard MongoDB types",
+  "description": "Dashboard and parameter models",
+  "$defs": {
+    "DefaultDashboard": {
+      "title": "DefaultDashboard",
+      "type": "string",
+      "enum": ["summary", "trends", "empty"]
+    },
+    "ParameterType": {
+      "title": "ParameterType",
+      "type": "string",
+      "enum": ["month", "year", "date_range", "select", "multi", "toggle", "number", "text"]
+    },
+    "ParameterOption": {
+      "title": "ParameterOption",
+      "type": "object",
+      "properties": {
+        "value": { "type": "string" },
+        "label": { "type": "string" }
+      },
+      "required": ["value", "label"]
+    },
+    "DashboardParameter": {
+      "title": "DashboardParameter",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "type": { "$ref": "#/$defs/ParameterType" },
+        "default_value": { "default": null },
+        "options": { "type": "array", "items": { "$ref": "#/$defs/ParameterOption" }, "default": [] },
+        "min_value": { "type": ["number", "null"], "default": null },
+        "max_value": { "type": ["number", "null"], "default": null },
+        "position": { "type": "integer", "default": 0 },
+        "width": { "type": "string", "default": "auto" },
+        "visible": { "type": "boolean", "default": true }
+      },
+      "required": ["id", "name", "type"]
+    },
+    "WidgetLayout": {
+      "title": "WidgetLayout",
+      "type": "object",
+      "properties": {
+        "i": { "type": "string" },
+        "x": { "type": "integer" },
+        "y": { "type": "integer" },
+        "w": { "type": "integer" },
+        "h": { "type": "integer" },
+        "color": { "type": "string", "default": "gray.50" }
+      },
+      "required": ["i", "x", "y", "w", "h"]
+    },
+    "DDashboardBase": {
+      "title": "DDashboardBase",
+      "type": "object",
+      "properties": {
+        "version": { "type": "string", "default": "0.4" },
+        "id": { "type": ["string", "null"], "default": null },
+        "type": { "type": "string" },
+        "title": { "type": "string" },
+        "icon": { "type": ["string", "null"], "default": "" },
+        "project_id": { "type": "string", "default": "" },
+        "layout": { "type": "array", "items": { "$ref": "#/$defs/WidgetLayout" } },
+        "widgets": { "type": "array", "default": [] },
+        "position_indx": { "type": "integer", "default": 0 },
+        "parameters": { "type": "array", "items": { "$ref": "#/$defs/DashboardParameter" }, "default": [] },
+        "parameter_values": { "type": "object", "default": {} }
+      },
+      "required": ["type", "title", "layout"]
+    }
+  }
+}

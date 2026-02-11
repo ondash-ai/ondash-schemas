@@ -1,0 +1,187 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "common.json",
+  "title": "Common MongoDB types",
+  "description": "Shared types used across multiple collections: widgets, periods, table columns",
+  "$defs": {
+    "ColumnType": {
+      "title": "ColumnType",
+      "type": "string",
+      "enum": ["text", "number", "currency", "percent", "date"]
+    },
+    "DWidgetType": {
+      "title": "DWidgetType",
+      "type": "string",
+      "enum": ["statistic", "report", "text", "table", "echart", "markdown", "html"]
+    },
+    "PeriodConst": {
+      "title": "PeriodConst",
+      "type": "string",
+      "enum": ["Month", "Quarter", "Half", "Year", "Unknown"]
+    },
+    "TableColumn": {
+      "title": "TableColumn",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "header": { "type": "string" },
+        "type": { "allOf": [{ "$ref": "#/$defs/ColumnType" }], "default": "text" },
+        "sortable": { "type": "boolean", "default": true },
+        "visible": { "type": "boolean", "default": true },
+        "width": { "type": ["string", "null"], "default": null },
+        "unit": { "type": ["string", "null"], "default": null }
+      },
+      "required": ["id", "header"]
+    },
+    "TableQueryState": {
+      "title": "TableQueryState",
+      "type": "object",
+      "properties": {
+        "sort_column": { "type": ["string", "null"], "default": null },
+        "sort_direction": { "type": "string", "default": "asc" },
+        "page": { "type": "integer", "default": 0 },
+        "page_size": { "type": "integer", "default": 20 },
+        "total_count": { "type": ["integer", "null"], "default": null }
+      }
+    },
+    "DWidgetBase": {
+      "title": "DWidgetBase",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "version": { "type": "string", "default": "0.2" },
+        "description": { "type": "string", "default": "" },
+        "type": { "type": "string" },
+        "tags": { "type": "array", "items": { "type": "string" }, "default": [] },
+        "xs": { "type": "array", "default": [] },
+        "ys": { "type": "array", "default": [] },
+        "unit": { "type": "string", "default": "HUF" },
+        "prompt": { "type": "string", "default": "" },
+        "template": { "type": "string", "default": "" },
+        "uses_parameters": { "type": "array", "items": { "type": "string" }, "default": [] },
+        "last_requested": { "type": ["string", "null"], "format": "date-time", "default": null },
+        "last_parameters": { "type": ["object", "null"], "default": null },
+        "cache_error": { "type": ["string", "null"], "default": null }
+      },
+      "required": ["id", "title"]
+    },
+    "DWidgetStatisticBase": {
+      "title": "DWidgetStatisticBase",
+      "allOf": [
+        { "$ref": "#/$defs/DWidgetBase" },
+        {
+          "type": "object",
+          "properties": {
+            "type": { "type": "string", "const": "statistic" },
+            "formula": { "type": "string" },
+            "period": { "type": "string" },
+            "value": { "type": ["number", "null"], "default": null },
+            "fx": { "type": "string", "default": "" },
+            "fy": {
+              "anyOf": [
+                { "type": "string" },
+                { "type": "number" },
+                { "type": "array", "items": { "type": "number" } },
+                { "type": "null" }
+              ],
+              "default": ""
+            }
+          },
+          "required": ["type", "formula", "period"]
+        }
+      ]
+    },
+    "DWidgetTableBase": {
+      "title": "DWidgetTableBase",
+      "allOf": [
+        { "$ref": "#/$defs/DWidgetBase" },
+        {
+          "type": "object",
+          "properties": {
+            "type": { "type": "string", "const": "table" },
+            "fx": { "type": "string" },
+            "fy": {
+              "anyOf": [
+                { "type": "string" },
+                { "type": "array", "items": { "type": "string" } },
+                { "type": "array", "items": { "type": "array", "items": { "anyOf": [{ "type": "string" }, { "type": "number" }] } } }
+              ]
+            },
+            "xs": { "type": "array", "items": { "type": "string" } },
+            "ys": { "type": "array", "items": { "type": "array", "items": { "anyOf": [{ "type": "string" }, { "type": "number" }] } } },
+            "sorted": { "type": "string", "default": "asc" },
+            "columns": { "type": "array", "items": { "$ref": "#/$defs/TableColumn" }, "default": [] },
+            "server_side": { "type": "boolean", "default": false },
+            "default_page_size": { "type": "integer", "default": 20 }
+          },
+          "required": ["type", "fx", "fy", "xs", "ys"]
+        }
+      ]
+    },
+    "DWidgetEChartBase": {
+      "title": "DWidgetEChartBase",
+      "allOf": [
+        { "$ref": "#/$defs/DWidgetBase" },
+        {
+          "type": "object",
+          "properties": {
+            "type": { "type": "string", "const": "echart" },
+            "echart": { "type": "object", "default": {} },
+            "fx": { "type": "string", "default": "" },
+            "fy": { "type": "string", "default": "" }
+          },
+          "required": ["type"]
+        }
+      ]
+    },
+    "DWidgetHtmlBase": {
+      "title": "DWidgetHtmlBase",
+      "allOf": [
+        { "$ref": "#/$defs/DWidgetBase" },
+        {
+          "type": "object",
+          "properties": {
+            "type": { "type": "string", "const": "html" },
+            "html": { "type": "string" }
+          },
+          "required": ["type", "html"]
+        }
+      ]
+    },
+    "DWidgetMarkdownBase": {
+      "title": "DWidgetMarkdownBase",
+      "allOf": [
+        { "$ref": "#/$defs/DWidgetBase" },
+        {
+          "type": "object",
+          "properties": {
+            "type": { "type": "string", "const": "markdown" },
+            "markdown": { "type": "string" }
+          },
+          "required": ["type", "markdown"]
+        }
+      ]
+    },
+    "DDateBase": {
+      "title": "DDateBase",
+      "type": "object",
+      "properties": {
+        "year": { "type": "integer" },
+        "month": { "type": "integer" },
+        "day": { "type": "integer" }
+      },
+      "required": ["year", "month", "day"]
+    },
+    "DPeriodBase": {
+      "title": "DPeriodBase",
+      "type": "object",
+      "properties": {
+        "start": { "$ref": "#/$defs/DDateBase" },
+        "end": { "$ref": "#/$defs/DDateBase" },
+        "initial": { "type": "boolean", "default": false }
+      },
+      "required": ["start", "end"]
+    }
+  }
+}
