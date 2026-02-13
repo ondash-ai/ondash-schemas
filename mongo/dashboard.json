@@ -32,8 +32,8 @@
         "type": { "$ref": "#/$defs/ParameterType" },
         "default_value": { "default": null },
         "options": { "type": "array", "items": { "$ref": "#/$defs/ParameterOption" }, "default": [] },
-        "min_value": { "type": ["number", "null"], "default": null },
-        "max_value": { "type": ["number", "null"], "default": null },
+        "min_value": { "default": null },
+        "max_value": { "default": null },
         "position": { "type": "integer", "default": 0 },
         "width": { "type": "string", "default": "auto" },
         "visible": { "type": "boolean", "default": true }

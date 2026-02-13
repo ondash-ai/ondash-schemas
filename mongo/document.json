@@ -4,11 +4,6 @@
   "title": "Document MongoDB types",
   "description": "Document models for ledger and file storage",
   "$defs": {
-    "DState": {
-      "title": "DState",
-      "type": "string",
-      "enum": ["new", "uploaded", "error", "warning", "revised"]
-    },
     "DContent": {
       "title": "DContent",
       "type": "object",
@@ -31,7 +26,7 @@
         "period": { "type": ["object", "null"], "default": null },
         "currency": { "type": "string", "default": "" },
         "raw": { "type": "string", "default": "" },
-        "state": { "allOf": [{ "$ref": "#/$defs/DState" }], "default": "uploaded" },
+        "state": { "type": "string", "default": "uploaded" },
         "errors": { "type": "array", "items": { "type": "string" }, "default": [] },
         "warnings": { "type": "array", "items": { "type": "string" }, "default": [] },
         "infos": { "type": "array", "items": { "type": "string" }, "default": [] }
@@ -54,7 +49,7 @@
           "default": null
         },
         "raw": { "type": "string", "default": "" },
-        "state": { "allOf": [{ "$ref": "#/$defs/DState" }], "default": "uploaded" },
+        "state": { "type": "string", "default": "uploaded" },
         "errors": { "type": "array", "items": { "type": "string" }, "default": [] },
         "created_at": { "type": ["string", "null"], "format": "date-time", "default": null },
         "modified_at": { "type": ["string", "null"], "format": "date-time", "default": null }

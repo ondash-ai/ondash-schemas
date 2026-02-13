@@ -12,6 +12,7 @@
         "user": { "type": "string" },
         "defaultProject": { "type": "string" },
         "jsonEditing": { "type": "boolean", "default": false },
+        "cliAgent": { "type": "boolean", "default": false },
         "fullname": { "type": "string", "default": "" },
         "photo": { "type": "string", "default": "" }
       },

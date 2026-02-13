@@ -113,7 +113,8 @@
             "sorted": { "type": "string", "default": "asc" },
             "columns": { "type": "array", "items": { "$ref": "#/$defs/TableColumn" }, "default": [] },
             "server_side": { "type": "boolean", "default": false },
-            "default_page_size": { "type": "integer", "default": 20 }
+            "default_page_size": { "type": "integer", "default": 20 },
+            "pagination_enabled": { "type": "boolean", "default": true }
           },
           "required": ["type", "fx", "fy", "xs", "ys"]
         }
