@@ -19,6 +19,11 @@
       "type": "string",
       "enum": ["unknown", "queued", "in_progress", "requires_action", "cancelling", "cancelled", "failed", "completed", "expired"]
     },
+    "DMessageType": {
+      "title": "DMessageType",
+      "type": "string",
+      "enum": ["text", "echart", "table", "metric", "dashboard", "markdown", "html"]
+    },
     "Action": {
       "title": "Action",
       "type": "object",
@@ -59,15 +64,13 @@
       "type": "object",
       "properties": {
         "id": { "type": "string" },
-        "assistant_id": { "type": "string" },
-        "thread_id": { "type": "string" },
         "role": { "type": "string" },
-        "message": { "type": "string" },
-        "action": { "type": "string", "default": "" },
+        "type": { "allOf": [{ "$ref": "#/$defs/DMessageType" }], "default": "text" },
+        "content": {},
         "timestamp": { "type": "string", "format": "date-time" },
         "user_rate": { "allOf": [{ "$ref": "#/$defs/DUserRate" }], "default": "ThumbUnknown" }
       },
-      "required": ["id", "assistant_id", "thread_id", "role", "message", "timestamp"]
+      "required": ["id", "role", "type", "content", "timestamp"]
     },
     "DReportBase": {
       "title": "DReportBase",
@@ -87,34 +90,21 @@
       "properties": {},
       "additionalProperties": true
     },
-    "DPluginBase": {
-      "title": "DPluginBase",
-      "type": "object",
-      "properties": {
-        "id": { "type": "string", "default": "" },
-        "message_id": { "type": "string" },
-        "object": { "type": "object" }
-      },
-      "required": ["message_id", "object"]
-    },
     "DChatBase": {
       "title": "DChatBase",
       "type": "object",
       "properties": {
         "id": { "type": ["string", "null"], "default": null },
-        "version": { "type": "string", "default": "0.4" },
+        "version": { "type": "string", "default": "0.5" },
         "instruction": { "type": "string", "default": "" },
         "title": { "type": "string" },
         "date": { "type": "string", "format": "date-time" },
         "project_id": { "type": "string" },
         "thread_id": { "type": "string", "default": "" },
         "run_id": { "type": "string", "default": "" },
-        "message_id": { "type": "string", "default": "" },
         "status": { "allOf": [{ "$ref": "#/$defs/ChatStatus" }], "default": "unknown" },
-        "assistant_id": { "type": "string", "default": "" },
         "user_id": { "type": "string", "default": "" },
         "messages": { "type": "array", "items": { "$ref": "#/$defs/DMessageBase" } },
-        "plugins": { "type": "array", "items": { "$ref": "#/$defs/DPluginBase" }, "default": [] },
         "type": { "allOf": [{ "$ref": "#/$defs/DChatType" }], "default": "ai_assistant" },
         "user_messages": { "type": "array", "items": { "$ref": "#/$defs/DUserMessage" }, "default": [] },
         "participants": { "type": "array", "items": { "$ref": "#/$defs/DParticipant" }, "default": [] },
