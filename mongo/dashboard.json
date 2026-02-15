@@ -23,6 +23,16 @@
       },
       "required": ["value", "label"]
     },
+    "ParameterRequest": {
+      "title": "ParameterRequest",
+      "type": "object",
+      "properties": {
+        "type": { "type": "string", "default": "sql" },
+        "assign_to": { "type": "string" },
+        "query": { "type": "string" }
+      },
+      "required": ["assign_to", "query"]
+    },
     "DashboardParameter": {
       "title": "DashboardParameter",
       "type": "object",
@@ -34,6 +44,10 @@
         "options": { "type": "array", "items": { "$ref": "#/$defs/ParameterOption" }, "default": [] },
         "min_value": { "default": null },
         "max_value": { "default": null },
+        "value": { "default": null },
+        "allow_all": { "type": "boolean", "default": false },
+        "requests": { "type": "array", "items": { "$ref": "#/$defs/ParameterRequest" }, "default": [] },
+        "last_requested": { "type": ["string", "null"], "format": "date-time", "default": null },
         "position": { "type": "integer", "default": 0 },
         "width": { "type": "string", "default": "auto" },
         "visible": { "type": "boolean", "default": true }

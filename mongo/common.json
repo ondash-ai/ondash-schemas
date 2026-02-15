@@ -12,7 +12,7 @@
     "DWidgetType": {
       "title": "DWidgetType",
       "type": "string",
-      "enum": ["statistic", "report", "text", "table", "echart", "markdown", "html"]
+      "enum": ["metric", "statistic", "report", "text", "table", "echart", "markdown", "html"]
     },
     "PeriodConst": {
       "title": "PeriodConst",
@@ -66,14 +66,14 @@
       },
       "required": ["id", "title"]
     },
-    "DWidgetStatisticBase": {
-      "title": "DWidgetStatisticBase",
+    "DWidgetMetricBase": {
+      "title": "DWidgetMetricBase",
       "allOf": [
         { "$ref": "#/$defs/DWidgetBase" },
         {
           "type": "object",
           "properties": {
-            "type": { "type": "string", "const": "statistic" },
+            "type": { "type": "string", "enum": ["metric", "statistic"] },
             "formula": { "type": "string" },
             "period": { "type": "string" },
             "value": { "type": ["number", "null"], "default": null },
