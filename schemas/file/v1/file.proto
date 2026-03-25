@@ -28,6 +28,7 @@ enum FileCommandType {
   FILE_COMMAND_OVERWRITE = 2;
   FILE_COMMAND_DELETE = 3;
   FILE_COMMAND_CANCEL = 4;
+  FILE_COMMAND_RECALCULATE = 5;
 }
 
 // Base envelope for all file events sent to Kafka topics
