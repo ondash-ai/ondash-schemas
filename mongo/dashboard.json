@@ -64,7 +64,9 @@
         "y": { "type": "integer", "minimum": 0, "description": "Row position" },
         "w": { "type": "integer", "minimum": 1, "maximum": 12, "description": "Width in grid columns (1-12)" },
         "h": { "type": "integer", "minimum": 1, "description": "Height in grid rows" },
-        "color": { "type": "string", "default": "gray.50" }
+        "color": { "type": "string", "default": "gray.50" },
+        "accent": { "type": ["string", "null"], "default": null, "description": "Accent border color, e.g. 'green.500' or '#2F855A'" },
+        "accent_position": { "type": ["string", "null"], "enum": ["top", "left", "right", "bottom", "all", null], "default": null, "description": "Which side to show the accent border" }
       },
       "required": ["i", "x", "y", "w", "h"]
     },

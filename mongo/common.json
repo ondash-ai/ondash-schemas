@@ -139,6 +139,7 @@
             "subtitle": { "type": ["string", "null"], "default": null, "description": "Secondary text shown below the value, e.g. '-9.0% vs 2025'" },
             "comparison_value": { "type": ["number", "null"], "default": null, "description": "Previous period value for comparison" },
             "comparison_label": { "type": ["string", "null"], "default": null, "description": "Label for comparison value, e.g. '2025 már'" },
+            "sparkline": { "type": ["string", "null"], "enum": ["line", "area", "column", "bar", null], "default": null, "description": "Sparkline chart type for time series display" },
             "scenarios": { "type": ["array", "null"], "items": { "$ref": "#/$defs/MetricScenario" }, "default": null, "description": "Scenario comparison values" },
             "goal": { "allOf": [{ "$ref": "#/$defs/MetricGoal" }], "default": null, "description": "Goal tracking information" }
           },
