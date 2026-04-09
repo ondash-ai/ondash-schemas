@@ -7,7 +7,7 @@
     "ColumnType": {
       "title": "ColumnType",
       "type": "string",
-      "enum": ["text", "number", "currency", "percent", "date"]
+      "enum": ["text", "number", "currency", "percent", "date", "delta", "badge"]
     },
     "DWidgetType": {
       "title": "DWidgetType",
@@ -48,9 +48,19 @@
         "visible": { "type": "boolean", "default": true },
         "width": { "type": ["string", "null"], "default": null },
         "unit": { "type": ["string", "null"], "default": null },
+        "color": { "type": ["string", "null"], "default": null, "description": "Column color: 'auto' for sign-based green/red, or explicit color string" },
         "update": { "allOf": [{ "$ref": "#/$defs/TableColumnUpdate" }], "default": null }
       },
       "required": ["id", "header"]
+    },
+    "TableRowMeta": {
+      "title": "TableRowMeta",
+      "description": "Optional metadata properties on table row objects",
+      "type": "object",
+      "properties": {
+        "style": { "type": ["string", "null"], "enum": ["summary", "section", "total", null], "default": null, "description": "Row style: summary (bold+border), section (spanning header), total (bold+thick border)" },
+        "indent": { "type": ["integer", "null"], "minimum": 0, "default": null, "description": "Visual indentation level (0-based)" }
+      }
     },
     "TableHierarchy": {
       "title": "TableHierarchy",
@@ -97,6 +107,26 @@
       },
       "required": ["id", "title"]
     },
+    "MetricScenario": {
+      "title": "MetricScenario",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "value": { "type": ["number", "null"], "default": null },
+        "color": { "type": ["string", "null"], "default": null }
+      },
+      "required": ["name"]
+    },
+    "MetricGoal": {
+      "title": "MetricGoal",
+      "type": "object",
+      "properties": {
+        "target": { "type": ["number", "null"], "default": null },
+        "min": { "type": ["number", "null"], "default": null },
+        "label": { "type": ["string", "null"], "default": null },
+        "achieved": { "type": ["boolean", "null"], "default": null }
+      }
+    },
     "DWidgetMetricBase": {
       "title": "DWidgetMetricBase",
       "allOf": [
@@ -105,7 +135,12 @@
           "type": "object",
           "properties": {
             "type": { "type": "string", "enum": ["metric", "statistic"] },
-            "value": { "type": ["number", "null"], "default": null }
+            "value": { "type": ["number", "null"], "default": null },
+            "subtitle": { "type": ["string", "null"], "default": null, "description": "Secondary text shown below the value, e.g. '-9.0% vs 2025'" },
+            "comparison_value": { "type": ["number", "null"], "default": null, "description": "Previous period value for comparison" },
+            "comparison_label": { "type": ["string", "null"], "default": null, "description": "Label for comparison value, e.g. '2025 már'" },
+            "scenarios": { "type": ["array", "null"], "items": { "$ref": "#/$defs/MetricScenario" }, "default": null, "description": "Scenario comparison values" },
+            "goal": { "allOf": [{ "$ref": "#/$defs/MetricGoal" }], "default": null, "description": "Goal tracking information" }
           },
           "required": ["type"]
         }
