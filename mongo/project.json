@@ -70,6 +70,18 @@
       },
       "required": ["name", "type"]
     },
+    "License": {
+      "title": "License",
+      "type": "object",
+      "properties": {
+        "plan": { "type": "string", "default": "free" },
+        "status": { "type": "string", "default": "active" },
+        "trial_ends_at": { "type": ["string", "null"], "format": "date-time", "default": null },
+        "stripe_customer_id": { "type": ["string", "null"], "default": null },
+        "stripe_subscription_id": { "type": ["string", "null"], "default": null },
+        "current_period_end": { "type": ["string", "null"], "format": "date-time", "default": null }
+      }
+    },
     "DProjectBase": {
       "title": "DProjectBase",
       "type": "object",
@@ -92,6 +104,7 @@
         "tags": { "type": "array", "items": { "type": "string" }, "default": [] },
         "connections": { "type": "array", "items": { "$ref": "#/$defs/ConnectionBase" }, "default": [] },
         "app_type": { "type": "string", "default": "monitoring" },
+        "license": { "allOf": [{ "$ref": "#/$defs/License" }], "default": {} },
         "schema_name": { "type": "string", "default": "" },
         "documents_synced": { "type": "boolean", "default": false }
       }
