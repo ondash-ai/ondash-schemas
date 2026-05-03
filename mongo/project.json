@@ -82,6 +82,47 @@
         "current_period_end": { "type": ["string", "null"], "format": "date-time", "default": null }
       }
     },
+    "OnleaseAddress": {
+      "title": "OnleaseAddress",
+      "type": "object",
+      "properties": {
+        "street": { "type": "string", "default": "" },
+        "city": { "type": "string", "default": "" },
+        "zip": { "type": "string", "default": "" },
+        "country": { "type": "string", "default": "" }
+      }
+    },
+    "OnleasePerson": {
+      "title": "OnleasePerson",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "default": "" },
+        "email": { "type": "string", "default": "" },
+        "phone": { "type": "string", "default": "" }
+      }
+    },
+    "OnleaseContract": {
+      "title": "OnleaseContract",
+      "type": "object",
+      "properties": {
+        "start_date": { "type": ["string", "null"], "default": null },
+        "end_date": { "type": ["string", "null"], "default": null },
+        "monthly_rent": { "type": ["number", "null"], "default": null },
+        "currency": { "type": "string", "default": "HUF" },
+        "notes": { "type": "string", "default": "" }
+      }
+    },
+    "OnleaseData": {
+      "title": "OnleaseData",
+      "description": "App-specific data for onlease projects",
+      "type": "object",
+      "properties": {
+        "owner": { "allOf": [{ "$ref": "#/$defs/OnleasePerson" }], "default": {} },
+        "tenants": { "type": "array", "items": { "$ref": "#/$defs/OnleasePerson" }, "default": [] },
+        "address": { "allOf": [{ "$ref": "#/$defs/OnleaseAddress" }], "default": {} },
+        "contract": { "allOf": [{ "$ref": "#/$defs/OnleaseContract" }], "default": {} }
+      }
+    },
     "DProjectBase": {
       "title": "DProjectBase",
       "type": "object",
@@ -106,7 +147,8 @@
         "app_type": { "type": "string", "default": "monitoring" },
         "license": { "allOf": [{ "$ref": "#/$defs/License" }], "default": {} },
         "schema_name": { "type": "string", "default": "" },
-        "documents_synced": { "type": "boolean", "default": false }
+        "documents_synced": { "type": "boolean", "default": false },
+        "onlease": { "allOf": [{ "$ref": "#/$defs/OnleaseData" }], "default": null }
       }
     }
   }
