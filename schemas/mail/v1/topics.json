@@ -1,1 +1,1 @@
-["mail.incoming", "mail.outgoing"]
+["mail.commands", "mail.events"]

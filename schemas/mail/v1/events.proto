@@ -8,8 +8,8 @@ import "google/protobuf/timestamp.proto";
 
 // =============================================================================
 // KAFKA TOPICS:
-//   - mail.incoming → IncomingMailEvent (emails received via SES)
-//   - mail.outgoing → OutgoingMailEvent (emails sent via SMTP/SES)
+//   - mail.commands → SendMailCommand, CreateAddressCommand, RemoveAddressCommand, RenameAddressCommand
+//   - mail.events   → MailSentEvent, IncomingMailEvent, AddressCreatedEvent, AddressRemovedEvent, AddressRenamedEvent
 // =============================================================================
 
 // Base envelope for all mail events sent to Kafka topics
@@ -19,15 +19,55 @@ message MailEventEnvelope {
   string company_id = 3;
   string user_id = 4;
 
-  // Event payload (one of)
   oneof event {
-    IncomingMailEvent incoming = 10;
-    OutgoingMailEvent outgoing = 11;
+    // Commands (consumed by mail service)
+    SendMailCommand send_mail = 10;
+    CreateAddressCommand create_address = 11;
+    RemoveAddressCommand remove_address = 12;
+    RenameAddressCommand rename_address = 13;
+
+    // Events (produced by mail service)
+    MailSentEvent mail_sent = 20;
+    IncomingMailEvent incoming = 21;
+    AddressCreatedEvent address_created = 22;
+    AddressRemovedEvent address_removed = 23;
+    AddressRenamedEvent address_renamed = 24;
   }
 }
 
 // ---------------------------------------------------------------------------
-// IncomingMailEvent - Email received via SES → S3 → SQS pipeline
+// SendMailCommand — request to send an email
+// ---------------------------------------------------------------------------
+message SendMailCommand {
+  string from = 1;
+  repeated string to = 2;
+  repeated string cc = 3;
+  string subject = 4;
+  string body_text = 5;
+  string body_html = 6;
+  repeated MailAttachment attachments = 7;
+  string project_id = 8;
+}
+
+// ---------------------------------------------------------------------------
+// MailSentEvent — confirmation that an email was sent (or failed)
+// ---------------------------------------------------------------------------
+message MailSentEvent {
+  string from = 1;
+  repeated string to = 2;
+  repeated string cc = 3;
+  string subject = 4;
+  string body_text = 5;
+  string body_html = 6;
+  bool success = 7;
+  string error_message = 8;
+  string sending_method = 9;
+  repeated MailAttachment attachments = 10;
+  string project_id = 11;
+}
+
+// ---------------------------------------------------------------------------
+// IncomingMailEvent — email received via SES → S3 → SQS pipeline
 // ---------------------------------------------------------------------------
 message IncomingMailEvent {
   string from = 1;
@@ -43,26 +83,55 @@ message IncomingMailEvent {
   repeated string references = 11;
   repeated MailAttachment attachments = 12;
   map<string, string> headers = 13;
+  string project_id = 14;
 }
 
 // ---------------------------------------------------------------------------
-// OutgoingMailEvent - Email sent via SMTP or SES
+// Address management commands
 // ---------------------------------------------------------------------------
-message OutgoingMailEvent {
-  string from = 1;
-  repeated string to = 2;
-  repeated string cc = 3;
-  string subject = 4;
-  string body_text = 5;
-  string body_html = 6;
-  bool success = 7;
-  string error_message = 8;
-  string sending_method = 9;
-  repeated MailAttachment attachments = 10;
+message CreateAddressCommand {
+  string project_id = 1;
+  string address = 2;
+}
+
+message RemoveAddressCommand {
+  string project_id = 1;
+  string address = 2;
+}
+
+message RenameAddressCommand {
+  string project_id = 1;
+  string old_address = 2;
+  string new_address = 3;
 }
 
 // ---------------------------------------------------------------------------
-// MailAttachment - Attachment metadata
+// Address management events (confirmations)
+// ---------------------------------------------------------------------------
+message AddressCreatedEvent {
+  string project_id = 1;
+  string address = 2;
+  bool success = 3;
+  string error_message = 4;
+}
+
+message AddressRemovedEvent {
+  string project_id = 1;
+  string address = 2;
+  bool success = 3;
+  string error_message = 4;
+}
+
+message AddressRenamedEvent {
+  string project_id = 1;
+  string old_address = 2;
+  string new_address = 3;
+  bool success = 4;
+  string error_message = 5;
+}
+
+// ---------------------------------------------------------------------------
+// MailAttachment — attachment metadata
 // ---------------------------------------------------------------------------
 message MailAttachment {
   string filename = 1;

@@ -1,0 +1,1 @@
+{"timestamp": "2024-01-01T00:00:00Z", "message_id": "evt-1", "company_id": "comp-1", "user_id": "user-1", "mail_sent": {"from": "noreply@ondash.ai", "to": ["recipient@example.com"], "subject": "Test Email", "body_text": "Hello from Ondash", "success": true, "sending_method": "ses", "project_id": "proj-1"}}
