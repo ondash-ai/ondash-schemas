@@ -125,19 +125,63 @@
       "type": "object",
       "properties": {
         "name": { "type": "string", "default": "" },
+        "id_number": { "type": "string", "default": "" },
         "email": { "type": "string", "default": "" },
-        "phone": { "type": "string", "default": "" }
+        "phone": { "type": "string", "default": "" },
+        "address": { "type": "string", "default": "" }
       }
     },
-    "OnleaseContract": {
-      "title": "OnleaseContract",
+    "OnleaseRenter": {
+      "title": "OnleaseRenter",
+      "description": "Renter identity as extracted from the rental contract",
       "type": "object",
       "properties": {
+        "name": { "type": "string", "default": "" },
+        "id_number": { "type": "string", "default": "" },
+        "address": { "type": "string", "default": "" },
+        "email": { "type": "string", "default": "" },
+        "phone": { "type": "string", "default": "" },
+        "birth_date": { "type": ["string", "null"], "default": null },
+        "birth_place": { "type": ["string", "null"], "default": null },
+        "mothers_name": { "type": ["string", "null"], "default": null },
+        "additional_residents": { "type": "array", "items": { "type": "string" }, "default": [] }
+      }
+    },
+    "OnleaseClause": {
+      "title": "OnleaseClause",
+      "description": "A numbered clause from the rental contract with an AI-generated title",
+      "type": "object",
+      "properties": {
+        "number": { "type": "integer" },
+        "title": { "type": "string", "default": "" },
+        "body": { "type": "string", "default": "" }
+      },
+      "required": ["number"]
+    },
+    "OnleaseRentContract": {
+      "title": "OnleaseRentContract",
+      "description": "A rental contract, parsed from a PDF document",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "default": "" },
+        "status": { "type": "string", "enum": ["active", "expired", "terminated"], "default": "active" },
         "start_date": { "type": ["string", "null"], "default": null },
         "end_date": { "type": ["string", "null"], "default": null },
+        "duration_type": { "type": "string", "enum": ["fixed", "indefinite"], "default": "indefinite" },
         "monthly_rent": { "type": ["number", "null"], "default": null },
         "currency": { "type": "string", "default": "HUF" },
-        "notes": { "type": "string", "default": "" }
+        "deposit_months": { "type": "integer", "default": 2 },
+        "deposit_amount": { "type": ["number", "null"], "default": null },
+        "payment_due_day": { "type": ["integer", "null"], "default": null },
+        "payment_due_text": { "type": ["string", "null"], "default": null },
+        "payment_method": { "type": ["string", "null"], "enum": ["bank_transfer", "cash", null], "default": null },
+        "notice_period_days": { "type": "integer", "default": 90 },
+        "indexation": { "type": ["string", "null"], "default": null },
+        "renter": { "allOf": [{ "$ref": "#/$defs/OnleaseRenter" }], "default": {} },
+        "clauses": { "type": "array", "items": { "$ref": "#/$defs/OnleaseClause" }, "default": [] },
+        "document_s3_key": { "type": ["string", "null"], "default": null },
+        "signed_at": { "type": ["string", "null"], "default": null },
+        "parsed_at": { "type": ["string", "null"], "default": null }
       }
     },
     "OnleaseData": {
@@ -146,9 +190,8 @@
       "type": "object",
       "properties": {
         "owner": { "allOf": [{ "$ref": "#/$defs/OnleasePerson" }], "default": {} },
-        "tenants": { "type": "array", "items": { "$ref": "#/$defs/OnleasePerson" }, "default": [] },
         "address": { "allOf": [{ "$ref": "#/$defs/OnleaseAddress" }], "default": {} },
-        "contract": { "allOf": [{ "$ref": "#/$defs/OnleaseContract" }], "default": {} }
+        "contracts": { "type": "array", "items": { "$ref": "#/$defs/OnleaseRentContract" }, "default": [] }
       }
     },
     "DProjectBase": {
