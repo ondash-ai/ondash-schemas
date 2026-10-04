@@ -194,6 +194,18 @@
         "contracts": { "type": "array", "items": { "$ref": "#/$defs/OnleaseRentContract" }, "default": [] }
       }
     },
+    "ProjectMember": {
+      "title": "ProjectMember",
+      "description": "A user who has been granted access to the project, with an app_type-dependent role. The set of valid role keys per app_type is defined by the backend role registry.",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string", "default": "" },
+        "role": { "type": "string", "default": "" },
+        "granted_by": { "type": "string", "default": "" },
+        "granted_at": { "type": ["string", "null"], "format": "date-time", "default": null }
+      },
+      "required": ["email", "role"]
+    },
     "DProjectBase": {
       "title": "DProjectBase",
       "type": "object",
@@ -210,6 +222,7 @@
         "headcount": { "type": "array", "items": { "$ref": "#/$defs/HeadCountAtDate" }, "default": [] },
         "accountancy": { "allOf": [{ "$ref": "#/$defs/Accountancy" }], "default": {} },
         "shared": { "type": "array", "items": { "type": "string" }, "default": [] },
+        "members": { "type": "array", "items": { "$ref": "#/$defs/ProjectMember" }, "default": [] },
         "lang": { "type": "string", "default": "en" },
         "pipeline": { "type": "string", "default": "ledger" },
         "chat": { "type": "string", "default": "" },
