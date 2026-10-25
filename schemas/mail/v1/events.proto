@@ -139,4 +139,5 @@ message MailAttachment {
   int64 size_bytes = 3;
   string s3_key = 4;
   string s3_bucket = 5;
+  string document_id = 6;  // id of the Document this attachment becomes (minted by the mail pipeline)
 }
