@@ -110,8 +110,8 @@
         "current_period_end": { "type": ["string", "null"], "format": "date-time", "default": null }
       }
     },
-    "OnleaseAddress": {
-      "title": "OnleaseAddress",
+    "RentAddress": {
+      "title": "RentAddress",
       "type": "object",
       "properties": {
         "street": { "type": "string", "default": "" },
@@ -120,8 +120,8 @@
         "country": { "type": "string", "default": "" }
       }
     },
-    "OnleasePerson": {
-      "title": "OnleasePerson",
+    "RentPerson": {
+      "title": "RentPerson",
       "type": "object",
       "properties": {
         "name": { "type": "string", "default": "" },
@@ -131,8 +131,8 @@
         "address": { "type": "string", "default": "" }
       }
     },
-    "OnleaseRenter": {
-      "title": "OnleaseRenter",
+    "RentRenter": {
+      "title": "RentRenter",
       "description": "Renter identity as extracted from the rental contract",
       "type": "object",
       "properties": {
@@ -147,8 +147,8 @@
         "additional_residents": { "type": "array", "items": { "type": "string" }, "default": [] }
       }
     },
-    "OnleaseClause": {
-      "title": "OnleaseClause",
+    "RentClause": {
+      "title": "RentClause",
       "description": "A numbered clause from the rental contract with an AI-generated title",
       "type": "object",
       "properties": {
@@ -158,8 +158,8 @@
       },
       "required": ["number"]
     },
-    "OnleaseRentContract": {
-      "title": "OnleaseRentContract",
+    "RentContract": {
+      "title": "RentContract",
       "description": "A rental contract, parsed from a PDF document",
       "type": "object",
       "properties": {
@@ -177,21 +177,21 @@
         "payment_method": { "type": ["string", "null"], "enum": ["bank_transfer", "cash", null], "default": null },
         "notice_period_days": { "type": "integer", "default": 90 },
         "indexation": { "type": ["string", "null"], "default": null },
-        "renter": { "allOf": [{ "$ref": "#/$defs/OnleaseRenter" }], "default": {} },
-        "clauses": { "type": "array", "items": { "$ref": "#/$defs/OnleaseClause" }, "default": [] },
+        "renter": { "allOf": [{ "$ref": "#/$defs/RentRenter" }], "default": {} },
+        "clauses": { "type": "array", "items": { "$ref": "#/$defs/RentClause" }, "default": [] },
         "document_s3_key": { "type": ["string", "null"], "default": null },
         "signed_at": { "type": ["string", "null"], "default": null },
         "parsed_at": { "type": ["string", "null"], "default": null }
       }
     },
-    "OnleaseData": {
-      "title": "OnleaseData",
-      "description": "App-specific data for onlease projects",
+    "RentData": {
+      "title": "RentData",
+      "description": "App-specific data for rent projects",
       "type": "object",
       "properties": {
-        "owner": { "allOf": [{ "$ref": "#/$defs/OnleasePerson" }], "default": {} },
-        "address": { "allOf": [{ "$ref": "#/$defs/OnleaseAddress" }], "default": {} },
-        "contracts": { "type": "array", "items": { "$ref": "#/$defs/OnleaseRentContract" }, "default": [] }
+        "owner": { "allOf": [{ "$ref": "#/$defs/RentPerson" }], "default": {} },
+        "address": { "allOf": [{ "$ref": "#/$defs/RentAddress" }], "default": {} },
+        "contracts": { "type": "array", "items": { "$ref": "#/$defs/RentContract" }, "default": [] }
       }
     },
     "ProjectMember": {
@@ -233,7 +233,7 @@
         "schema_name": { "type": "string", "default": "" },
         "documents_synced": { "type": "boolean", "default": false },
         "project_email_address": { "type": ["string", "null"], "default": null },
-        "onlease": { "allOf": [{ "$ref": "#/$defs/OnleaseData" }], "default": null }
+        "rent": { "allOf": [{ "$ref": "#/$defs/RentData" }], "default": null }
       }
     }
   }

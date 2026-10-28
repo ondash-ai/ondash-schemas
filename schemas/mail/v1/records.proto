@@ -11,7 +11,7 @@ import "google/protobuf/timestamp.proto";
 //
 // These messages are the canonical field contract for the persisted mail and
 // document tables shared across the ONDASH backends (platform backend owns the
-// store; grants/renting/finan read it). Each backend hand-writes a SQLModel
+// store; grants/rent/finan read it). Each backend hand-writes a SQLModel
 // that matches these fields. They are deliberately kept separate from
 // events.proto so DB-schema evolution and Kafka wire-event evolution do not
 // collide.

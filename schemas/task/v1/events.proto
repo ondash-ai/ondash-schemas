@@ -10,7 +10,7 @@ option go_package = "github.com/looptroops/socket/internal/pb/schemas/task/v1";
 //   - task.result → TaskEnvelope{result}   (owning service -> conductor)
 //
 // The conductor's generic `call_service` bridge hands work to the owning service
-// (grants/finan/renting/mail/report-engine...) via task.cmd, then parks on the
+// (grants/finan/rent/mail/report-engine...) via task.cmd, then parks on the
 // Restate awakeable named by `awakeable_id` until the service replies on
 // task.result. Task-specific args/output travel as JSON in payload_json/result_json
 // (typed envelope + JSON blob, same pattern as llm.v1 AnswerEvent.content_json).
