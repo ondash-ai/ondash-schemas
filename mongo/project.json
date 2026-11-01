@@ -228,7 +228,7 @@
         "chat": { "type": "string", "default": "" },
         "tags": { "type": "array", "items": { "type": "string" }, "default": [] },
         "connections": { "type": "array", "items": { "$ref": "#/$defs/ConnectionBase" }, "default": [] },
-        "app_type": { "type": "string", "default": "monitoring" },
+        "app_type": { "type": "string", "default": "finance" },
         "license": { "allOf": [{ "$ref": "#/$defs/License" }], "default": {} },
         "schema_name": { "type": "string", "default": "" },
         "documents_synced": { "type": "boolean", "default": false },
