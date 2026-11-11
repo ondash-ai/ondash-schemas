@@ -223,6 +223,7 @@
         "accountancy": { "allOf": [{ "$ref": "#/$defs/Accountancy" }], "default": {} },
         "shared": { "type": "array", "items": { "type": "string" }, "default": [] },
         "members": { "type": "array", "items": { "$ref": "#/$defs/ProjectMember" }, "default": [] },
+        "owner_role": { "type": "string", "default": "", "description": "The owner's app_type role; empty means the app_type's default role. The owner always has full access." },
         "lang": { "type": "string", "default": "en" },
         "pipeline": { "type": "string", "default": "ledger" },
         "chat": { "type": "string", "default": "" },
