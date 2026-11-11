@@ -47,6 +47,10 @@ message SendMailCommand {
   string body_html = 6;
   repeated MailAttachment attachments = 7;
   string project_id = 8;
+  // Threading: RFC Message-ID of the mail being replied to, and the full
+  // References chain (oldest first). Empty for a new conversation.
+  string in_reply_to = 9;
+  repeated string references = 10;
 }
 
 // ---------------------------------------------------------------------------
@@ -64,6 +68,10 @@ message MailSentEvent {
   string sending_method = 9;
   repeated MailAttachment attachments = 10;
   string project_id = 11;
+  // RFC Message-ID header set on the outgoing mail, plus its threading headers.
+  string rfc_message_id = 12;
+  string in_reply_to = 13;
+  repeated string references = 14;
 }
 
 // ---------------------------------------------------------------------------

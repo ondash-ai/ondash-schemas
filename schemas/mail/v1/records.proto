@@ -53,6 +53,7 @@ message MailRecord {
   repeated MailAttachmentRecord attachments = 16;
   google.protobuf.Timestamp created_at = 17;
   google.protobuf.Timestamp modified_at = 18;
+  string direction = 19;                          // "in" (received) | "out" (sent by the project)
 }
 
 // ---------------------------------------------------------------------------
