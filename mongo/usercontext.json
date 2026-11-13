@@ -13,6 +13,8 @@
         "defaultProject": { "type": "string" },
         "jsonEditing": { "type": "boolean", "default": false },
         "cliAgent": { "type": "boolean", "default": false },
+        "showOcr": { "type": "boolean", "default": true },
+        "showGrantConditions": { "type": "boolean", "default": true },
         "fullname": { "type": "string", "default": "" },
         "photo": { "type": "string", "default": "" }
       },
