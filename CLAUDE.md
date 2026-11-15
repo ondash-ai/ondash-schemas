@@ -27,18 +27,18 @@ This is a Protocol Buffer schema repository for Ondash AI, serving as the single
 ## Common Commands
 
 ### Setup
-```bash
-npm install  # Install dependencies (jq for Kafka scripts)
-```
-
-Note: `jq` is required for the Kafka registry upload script. Install with: `brew install jq` (macOS)
+No package.json: the scripts need only `jq` (`brew install jq`) and `curl`.
 
 ### Publishing to Schema Registry
+One domain at a time; the topics come from `schemas/<domain>/v<N>/topics.json`.
+There is one registry per broker (prod `redpanda`, dev `redpanda-dev`); upload to both.
 ```bash
-npm run kafka                # Upload proto schemas to Redpanda Schema Registry at ondash:30081
-npm run kafka:configure      # Enable schema validation on Kafka topics
-npm run console:configure    # Configure Redpanda Console to deserialize protobuf messages (one-time setup)
-npm run kafka:test          # Test by producing sample messages
+# prod registry (ondash:30081 until the prod broker becomes cluster-only)
+./scripts/upload-schema.sh artifact
+
+# dev registry: port-forward, dev topics carry the "dev." prefix
+kubectl port-forward -n events svc/redpanda-dev 18081:8081 &
+SCHEMA_REGISTRY_URL=http://127.0.0.1:18081 TOPIC_PREFIX=dev. ./scripts/upload-schema.sh artifact
 ```
 
 ## Using Schemas in Consuming Services
@@ -114,9 +114,7 @@ Note: Go schemas include `go_package` option pointing to `github.com/looptroops/
 
 **Topics**: `chat-messages` and `upload-messages`
 
-**Schema Enforcement**: After uploading schemas, run `npm run kafka:configure` to enable validation. This ensures messages conform to the registered protobuf schemas.
-
-**Redpanda Console**: Run `npm run console:configure` (one-time setup) to enable protobuf deserialization in the UI at http://ondash:30011
+**Redpanda Console**: http://ondash:30011 (configured in `kubernetes/core/redpanda-dev/`)
 
 **Producing Messages**: Use `rpk` with the ondash profile:
 ```bash
@@ -125,11 +123,6 @@ rpk topic produce chat-messages --profile ondash --schema-id 2 --schema-type cha
 
 # Upload messages (schema id: 1)
 rpk topic produce upload-messages --profile ondash --schema-id 1 --schema-type upload.v1.Message
-```
-
-Or use the test script:
-```bash
-npm run kafka:test  # Produces test messages to both topics
 ```
 
 Provide JSON matching the proto structure - `rpk` will encode to protobuf.

@@ -1,0 +1,89 @@
+syntax = "proto3";
+
+package artifact.v1;
+
+option go_package = "github.com/looptroops/socket/internal/pb/schemas/artifact/v1";
+
+import "google/protobuf/timestamp.proto";
+
+// =============================================================================
+// KAFKA TOPICS:
+//   - artifact.cmd    → ArtifactEnvelope{render_page}         (agent / scheduler -> artifact)
+//   - artifact.events → ArtifactEnvelope{render_page_result}  (artifact -> requesting service)
+//
+// System-initiated renders of a frontend project page to PDF (the AI agent
+// answering a mail, a scheduled monthly report). The page is named by a page
+// reference (app + page + project + params), never by a URL: the artifact
+// service builds the address itself and renders it with a render token the
+// gateway grants only while `on_behalf_of` still has access to the project.
+// =============================================================================
+
+// Envelope carried on both topics (index 0). The oneof selects the message.
+message ArtifactEnvelope {
+  oneof payload {
+    // Commands (consumed by the artifact service)
+    RenderPageCommand render_page = 10;
+
+    // Events (produced by the artifact service)
+    RenderPageResult render_page_result = 20;
+  }
+}
+
+enum RenderStatus {
+  RENDER_STATUS_UNSPECIFIED = 0;
+  RENDER_STATUS_SUCCESS = 1;
+  RENDER_STATUS_FAILED = 2;
+}
+
+// ---------------------------------------------------------------------------
+// RenderPageCommand — render one frontend project page as PDF into S3
+// ---------------------------------------------------------------------------
+message RenderPageCommand {
+  string request_id = 1;           // caller-chosen id ([A-Za-z0-9_-]{1,64}); echoed in the result, names the S3 object
+  string project_id = 2;
+  string app = 3;                  // frontend app: finance | grants | rent | home | onepreneur | scada
+  string page = 4;                 // page path inside the app, plain segments only, e.g. "dashboard"
+  map<string, string> params = 5;  // extra query parameters, e.g. {"dashboard": "<id>"}; "project" and "print" are reserved
+  string on_behalf_of = 6;         // email of the person the render is made for; decides access
+  string requested_by = 7;         // name of the requesting service (for logs)
+  PdfOptions options = 8;
+  RenderDelivery delivery = 9;
+}
+
+message PdfOptions {
+  string format = 1;               // A4 (default) | A3 | Letter | Legal
+  optional bool landscape = 2;     // default true
+  PdfMargin margin = 3;            // default 1cm on every side
+  optional bool print_background = 4;  // default true
+  optional double scale = 5;       // default 1
+}
+
+message PdfMargin {
+  string top = 1;                  // CSS length, e.g. "1cm"
+  string bottom = 2;
+  string left = 3;
+  string right = 4;
+}
+
+// Where the PDF should go. Both fields are hints: the artifact service only
+// writes to its configured bucket, under its configured prefix. The object key
+// is always chosen by the service: <prefix>[/<s3_key_prefix>]/<project_id>/<request_id>.pdf
+message RenderDelivery {
+  optional string s3_bucket = 1;
+  optional string s3_key_prefix = 2;
+}
+
+// ---------------------------------------------------------------------------
+// RenderPageResult — outcome of a RenderPageCommand
+// ---------------------------------------------------------------------------
+message RenderPageResult {
+  string request_id = 1;
+  string project_id = 2;
+  RenderStatus status = 3;
+  string s3_bucket = 4;            // set on success
+  string s3_key = 5;               // set on success
+  int64 size_bytes = 6;            // set on success
+  string error_code = 7;           // INVALID_REQUEST | ACCESS_DENIED | TOKEN_UNAVAILABLE | BUSY | RENDER_FAILED | STORAGE_FAILED
+  string error_message = 8;
+  google.protobuf.Timestamp completed_at = 9;
+}

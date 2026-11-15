@@ -1,7 +1,11 @@
 #!/bin/bash
 set -e
 
-SCHEMA_REGISTRY_URL="http://ondash:30081"
+# Registry and topic prefix can be overridden, e.g. for the dev broker:
+#   kubectl port-forward -n events svc/redpanda-dev 18081:8081 &
+#   SCHEMA_REGISTRY_URL=http://127.0.0.1:18081 TOPIC_PREFIX=dev. ./scripts/upload-schema.sh artifact
+SCHEMA_REGISTRY_URL="${SCHEMA_REGISTRY_URL:-http://ondash:30081}"
+TOPIC_PREFIX="${TOPIC_PREFIX:-}"
 
 DOMAIN=$1
 if [ -z "$DOMAIN" ]; then
@@ -48,6 +52,7 @@ echo ""
 payload=$(jq -n --rawfile schema "$PROTO_FILE" '{schemaType: "PROTOBUF", schema: $schema}')
 
 for topic in $topics; do
+  topic="${TOPIC_PREFIX}${topic}"
   subject="${topic}-value"
 
   echo "Uploading schema for topic: $topic (subject: $subject)"

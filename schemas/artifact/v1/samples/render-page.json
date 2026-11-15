@@ -1,0 +1,1 @@
+{"render_page": {"request_id": "req-20261115-0001", "project_id": "proj-1", "app": "finance", "page": "dashboard", "params": {"dashboard": "dash-1"}, "on_behalf_of": "user@example.com", "requested_by": "agent", "options": {"format": "A4", "landscape": true}}}
