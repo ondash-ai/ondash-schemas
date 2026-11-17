@@ -33,12 +33,12 @@ No package.json: the scripts need only `jq` (`brew install jq`) and `curl`.
 One domain at a time; the topics come from `schemas/<domain>/v<N>/topics.json`.
 There is one registry per broker (prod `redpanda`, dev `redpanda-dev`); upload to both.
 ```bash
-# prod registry (ondash:30081 until the prod broker becomes cluster-only)
-./scripts/upload-schema.sh artifact
+# dev registry (NodePort ondash:30081); dev topics carry the "dev." prefix
+TOPIC_PREFIX=dev. ./scripts/upload-schema.sh artifact
 
-# dev registry: port-forward, dev topics carry the "dev." prefix
-kubectl port-forward -n events svc/redpanda-dev 18081:8081 &
-SCHEMA_REGISTRY_URL=http://127.0.0.1:18081 TOPIC_PREFIX=dev. ./scripts/upload-schema.sh artifact
+# prod registry: cluster-only, through a port-forward
+kubectl port-forward -n events svc/redpanda 28081:8081 &
+SCHEMA_REGISTRY_URL=http://127.0.0.1:28081 ./scripts/upload-schema.sh artifact
 ```
 
 ## Using Schemas in Consuming Services

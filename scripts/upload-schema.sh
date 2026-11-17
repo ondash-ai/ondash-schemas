@@ -1,9 +1,10 @@
 #!/bin/bash
 set -e
 
-# Registry and topic prefix can be overridden, e.g. for the dev broker:
-#   kubectl port-forward -n events svc/redpanda-dev 18081:8081 &
-#   SCHEMA_REGISTRY_URL=http://127.0.0.1:18081 TOPIC_PREFIX=dev. ./scripts/upload-schema.sh artifact
+# Defaults to the dev registry (NodePort). Dev topics need TOPIC_PREFIX=dev.
+# The prod registry is cluster-only:
+#   kubectl port-forward -n events svc/redpanda 28081:8081 &
+#   SCHEMA_REGISTRY_URL=http://127.0.0.1:28081 ./scripts/upload-schema.sh artifact
 SCHEMA_REGISTRY_URL="${SCHEMA_REGISTRY_URL:-http://ondash:30081}"
 TOPIC_PREFIX="${TOPIC_PREFIX:-}"
 
