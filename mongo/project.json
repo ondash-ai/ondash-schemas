@@ -233,6 +233,7 @@
         "tax_number": { "type": "string", "default": "", "description": "The company's Hungarian tax number (12345678-1-12), used for the certified data lookup." },
         "grant_type": { "type": ["string", "null"], "default": null, "description": "grants: key of the project's grant type (public.grant_type). Set at creation, can't be changed." },
         "lifecycle_mode": { "type": ["string", "null"], "default": null, "description": "grants: 'A' while applying, 'B' after the application is submitted." },
+        "auto_process": { "type": "boolean", "default": false, "description": "Process new documents (uploaded, pasted or mailed) with the agent automatically. Off by default." },
         "license": { "allOf": [{ "$ref": "#/$defs/License" }], "default": {} },
         "schema_name": { "type": "string", "default": "" },
         "documents_synced": { "type": "boolean", "default": false },
